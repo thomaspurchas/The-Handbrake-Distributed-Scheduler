@@ -12,8 +12,8 @@ import re
 
 
 HANDBRAKECLIPATH = 'Handbrake\HandBrakeCLI.exe'
-INPUTPATH = "Handbrake\\test.avi"
-OUTPUTPATH = "Handbrake\\OutputTest.mp4"
+INPUTPATH = "Handbrake\\test.avi" # This needs replacing
+OUTPUTPATH = "Handbrake\\OutputTest.mp4" # This needs replacing
 
 class HandBrakeProcess(protocol.ProcessProtocol):
     def __init__(self, ProgressCallback, OutCallback, ErrorCallback, EndCallback):
@@ -38,7 +38,8 @@ class HandBrakeProcess(protocol.ProcessProtocol):
         self.ErrBack = ErrorCallback
         self.EndBack = EndCallback
         
-        # Check that the call backs are callable
+        # Check that the call backs are callable. There may be a better way of
+        # doing this using interface definitions and stuff.
         assert callable(self.ProgressBack)
         assert callable(self.OutBack)
         assert callable(self.ErrBack)
