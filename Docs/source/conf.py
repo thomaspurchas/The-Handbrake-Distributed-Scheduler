@@ -96,7 +96,9 @@ html_theme = 'default'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    "collapsiblesidebar": "true"
+    }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -168,9 +170,9 @@ htmlhelp_basename = 'HandbrakeDistributedSchedulerdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
-
-# The paper size ('letter' or 'a4').
-#latex_paper_size = 'letter'
+latex_elements = {}
+# The paper size ('letterpaper' or 'a4paper').
+latex_elements['papersize'] = 'a4paper'
 
 # The font size ('10pt', '11pt' or '12pt').
 #latex_font_size = '10pt'

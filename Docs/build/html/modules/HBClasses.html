@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HBClasses — Documentation on the basic classes &mdash; Handbrake Distributed Scheduler v0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="Handbrake Distributed Scheduler v0.1 documentation" href="../index.html" />
+    <link rel="next" title="Protocol — A description of how we communicate" href="../specs/protocol.html" />
+    <link rel="prev" title="Welcome to Handbrake Distributed Scheduler’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../specs/protocol.html" title="Protocol — A description of how we communicate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Handbrake Distributed Scheduler’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Handbrake Distributed Scheduler v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hbclasses-documentation-on-the-basic-classes">
+<h1><a class="reference internal" href="#module-HBClasses" title="HBClasses"><tt class="xref py py-mod docutils literal"><span class="pre">HBClasses</span></tt></a> &#8212; Documentation on the basic classes<a class="headerlink" href="#hbclasses-documentation-on-the-basic-classes" title="Permalink to this headline">¶</a></h1>
+<p>These classes makes up the basic set of class used for communication.</p>
+<span class="target" id="module-HBClasses"></span><dl class="class">
+<dt id="HBClasses.HBClient">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBClient</tt><a class="headerlink" href="#HBClasses.HBClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>This identifies the client.</p>
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_queueUpdate">
+<tt class="descname">remote_queueUpdate</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_queueUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called to tell the client that we have changed their
+queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_stopJob">
+<tt class="descname">remote_stopJob</tt><big>(</big><em>Job</em><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_stopJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called to get a client to stop working on a job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Job</strong> (<a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>) &#8211; The job to stop working on.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_shutdown">
+<tt class="descname">remote_shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>The server is shutting down. All clients should stop work and
+exit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HBClasses.HBQueue">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBQueue</tt><a class="headerlink" href="#HBClasses.HBQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This holds a load of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>s and is passed to the
+clients so they know what to do.</p>
+<dl class="method">
+<dt id="HBClasses.HBQueue.remote_getJobs">
+<tt class="descname">remote_getJobs</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBQueue.remote_getJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This get a dictionary of jobs from the server. The
+dictionary keys give order, or something like that.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of jobs</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HBClasses.HBJob">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBJob</tt><a class="headerlink" href="#HBClasses.HBJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>This tells the client to do a specific task. These should have
+some sort of hierarchy to allow jobs to happen simultaneously.
+e.g. download one raw file while transcoding another.</p>
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_getFile">
+<tt class="descname">remote_getFile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the file related to this job. This needs to be expanded
+to except more than one file.</p>
+<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_returnFile">
+<tt class="descname">remote_returnFile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_returnFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the finished product.</p>
+<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_getProfile">
+<tt class="descname">remote_getProfile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the profile to give to handbrake.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A dictionary with the nessary details that need
+to be passed onto HandBrake.</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to Handbrake Distributed Scheduler&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../specs/protocol.html"
+                        title="next chapter">Protocol &#8212; A description of how we communicate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/HBClasses.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../specs/protocol.html" title="Protocol — A description of how we communicate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Handbrake Distributed Scheduler’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">Handbrake Distributed Scheduler v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Thomas Purchas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
