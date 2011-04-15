@@ -64,6 +64,18 @@
 <tt class="descname">remote_queueUpdate</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_queueUpdate" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called to tell the client that we have changed their
 queue.</p>
+<p>Clients should now call <a class="reference internal" href="#HBClasses.HBQueue.remote_getJobs" title="HBClasses.HBQueue.remote_getJobs"><tt class="xref py py-meth docutils literal"><span class="pre">remote_getJobs()</span></tt></a> to see what
+has changed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is possiable to compare referance objects and get a
+meaningful result. To using <tt class="docutils literal"><span class="pre">==</span></tt> to work out what jobs
+have been added or removed is viable.</p>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is achived by twisted using the <tt class="docutils literal"><span class="pre">.luid</span></tt> attribute.</p>
+</div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -92,20 +104,20 @@ exit.</p>
 <dl class="class">
 <dt id="HBClasses.HBQueue">
 <em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBQueue</tt><a class="headerlink" href="#HBClasses.HBQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>This holds a load of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>s and is passed to the
+<dd><p>This holds a load of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>&#8216;s and is passed to the
 clients so they know what to do.</p>
 <dl class="method">
 <dt id="HBClasses.HBQueue.remote_getJobs">
 <tt class="descname">remote_getJobs</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBQueue.remote_getJobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>This get a dictionary of jobs from the server. The
-dictionary keys give order, or something like that.</p>
+<dd><p>This gets a list of assined <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>s from the server.
+The <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a> in index 0 should be executed first.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of jobs</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>&#8216;s.</td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -120,32 +132,169 @@ dictionary keys give order, or something like that.</p>
 some sort of hierarchy to allow jobs to happen simultaneously.
 e.g. download one raw file while transcoding another.</p>
 <dl class="method">
-<dt id="HBClasses.HBJob.remote_getFile">
-<tt class="descname">remote_getFile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the file related to this job. This needs to be expanded
-to except more than one file.</p>
+<dt id="HBClasses.HBJob.remote_serveFiles">
+<tt class="descname">remote_serveFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_serveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instructs the server to make the files nessary for the job
+avilable in an FTP location.</p>
+<p>The location returned will be a folder location, all files
+contained within are nessary for the job.</p>
 <p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="HBClasses.HBJob.remote_returnFile">
-<tt class="descname">remote_returnFile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_returnFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the finished product.</p>
-<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="HBClasses.HBJob.remote_getProfile">
-<tt class="descname">remote_getProfile</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the profile to give to handbrake.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A dictionary with the nessary details that need
-to be passed onto HandBrake.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A URL to the FTP location of the format <a class="reference external" href="ftp://server:port/location">ftp://server:port/location</a></td>
 </tr>
-<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-data docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_returnFiles">
+<tt class="descname">remote_returnFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_returnFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instructs the server to open up an FTP location to return
+the file to.</p>
+<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A URL to the FTP location of the format <a class="reference external" href="ftp://server:port/location">ftp://server:port/location</a></td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-data docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_getArgs">
+<tt class="descname">remote_getArgs</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of arguments that need to be passed to handbrake. The list just
+needs to be prepended with a process name after which it can be pass stright
+to <tt class="xref py py-meth docutils literal"><span class="pre">reactor.spawnProcess()</span></tt> as the <cite>arg</cite> keyword argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-meth docutils literal"><span class="pre">reactor.spawnProcess()</span></tt> <cite>arg</cite> list</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setStage">
+<tt class="descname">remote_setStage</tt><big>(</big><em>Stage</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setStage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets the state of the job. The stage is an
+interger number between 1 and 5 which have the following
+meaning:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="23%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Number</th>
+<th class="head">Short Description</th>
+<th class="head">Long Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>Queued</td>
+<td>Nothing has happened to it, this is a jobs initial state</td>
+</tr>
+<tr><td>2</td>
+<td>Transfering to client</td>
+<td>The jobs files are currently being transfered to a client</td>
+</tr>
+<tr><td>3</td>
+<td>Transcoding</td>
+<td>The job is currenlty being transcoded and is in progress</td>
+</tr>
+<tr><td>4</td>
+<td>Transfering to server</td>
+<td>The jobs files are being transfered back after transcoding</td>
+</tr>
+<tr><td>5</td>
+<td>Complete</td>
+<td>The job is complete. All resulting files are back at the server</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Stage</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; The current stage of the job</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setPercentage">
+<tt class="descname">remote_setPercentage</tt><big>(</big><em>Percentage</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setPercentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This sets the percentage complete of the jobs current stage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Percentage</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Percent complete (0 - 100)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setETA">
+<tt class="descname">remote_setETA</tt><big>(</big><em>Time</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setETA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the time till completion of the current stage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Time</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Time till completion in seconds.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setSpeed">
+<tt class="descname">remote_setSpeed</tt><big>(</big><em>Speed</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the speed of the current stage. The unit of speed changes
+depending on the stage.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="64%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Stage</th>
+<th class="head">Unit</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>2 and 4</td>
+<td>MB/s</td>
+</tr>
+<tr><td>3</td>
+<td>FPS</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Speed</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Speed of current stage</td>
 </tr>
 </tbody>
 </table>
