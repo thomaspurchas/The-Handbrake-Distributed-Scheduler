@@ -57,7 +57,7 @@
 <p>These classes makes up the basic set of class used for communication.</p>
 <span class="target" id="module-HBClasses"></span><dl class="class">
 <dt id="HBClasses.HBClient">
-<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBClient</tt><a class="headerlink" href="#HBClasses.HBClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBClient</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>This identifies the client.</p>
 <dl class="method">
 <dt id="HBClasses.HBClient.remote_queueUpdate">
@@ -102,8 +102,45 @@ exit.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="HBClasses.HBServer">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBServer</tt><big>(</big><em>pb.Root</em><big>)</big><a class="headerlink" href="#HBClasses.HBServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the root server object. This gets sent by  twisted when a client connects.</p>
+<dl class="method">
+<dt id="HBClasses.HBServer.remote_getQueue">
+<tt class="descname">remote_getQueue</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBServer.remote_getQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by a client to signify that they are ready to except jobs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A job queue</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBServer.remote_loseQueue">
+<tt class="descname">remote_loseQueue</tt><big>(</big><em>Queue</em><big>)</big><a class="headerlink" href="#HBClasses.HBServer.remote_loseQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the client to tell the server that it is no longer capable
+of completing the passed <a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Queue</strong> (<a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a>) &#8211; The Queue that can&#8217;t be completed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="HBClasses.HBQueue">
-<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBQueue</tt><a class="headerlink" href="#HBClasses.HBQueue" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBQueue</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBQueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>This holds a load of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>&#8216;s and is passed to the
 clients so they know what to do.</p>
 <dl class="method">
@@ -127,7 +164,7 @@ The <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob
 
 <dl class="class">
 <dt id="HBClasses.HBJob">
-<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBJob</tt><a class="headerlink" href="#HBClasses.HBJob" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBJob</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>This tells the client to do a specific task. These should have
 some sort of hierarchy to allow jobs to happen simultaneously.
 e.g. download one raw file while transcoding another.</p>

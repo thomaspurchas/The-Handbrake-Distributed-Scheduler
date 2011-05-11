@@ -5,7 +5,7 @@ These classes makes up the basic set of class used for communication.
 
 .. module:: HBClasses
 
-.. class:: HBClient()
+.. class:: HBClient(pb.Referenceable)
 
     This identifies the client.
     
@@ -36,8 +36,27 @@ These classes makes up the basic set of class used for communication.
     
         The server is shutting down. All clients should stop work and
         exit.
+		
+..	class:: HBServer(pb.Root)
+
+	This is the root server object. This gets sent by  twisted when a client connects.
+	
+	..	method:: remote_getQueue()
+	
+		This is called by a client to signify that they are ready to except jobs.
+		
+		:returns: A job queue
+		:rtype: :class:`.HBQueue`
+		
+	.. method:: remote_loseQueue(Queue)
+	
+		This is called by the client to tell the server that it is no longer capable
+		of completing the passed :class:`.HBQueue`
+		
+		:param Queue: The Queue that can't be completed
+		:type Queue: :class:`.HBQueue`
     
-..  class:: HBQueue()
+..  class:: HBQueue(pb.Referenceable)
 
     This holds a load of :class:`.HBJob`\'s and is passed to the
     clients so they know what to do.
@@ -50,7 +69,7 @@ These classes makes up the basic set of class used for communication.
         :returns: List of :class:`HBJob`\'s.
         :rtype: :class:`list`
     
-..  class:: HBJob()
+..  class:: HBJob(pb.Referenceable)
 
     This tells the client to do a specific task. These should have
     some sort of hierarchy to allow jobs to happen simultaneously.
