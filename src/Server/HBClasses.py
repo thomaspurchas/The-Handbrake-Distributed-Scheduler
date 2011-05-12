@@ -30,7 +30,7 @@ class HBQueue(pb.Referenceable):
     
     def __init__(self, Client, Jobs=None):
         
-        self.Client = Client
+        self.client = Client
         
         if Jobs == None:
             self.jobs = []
@@ -45,10 +45,13 @@ class HBQueue(pb.Referenceable):
         self.jobs.append(Job)
         self.client.callRemote("queueUpdate")
         
+        self.Job.registerQueue(self)
+        
     def removeJob(self, Job):
         
         try:
             self.jobs.remove(Job)
+            self.Job.unregisterQueue()
         except:
             raise ValueError('That job is not in this list')
     
@@ -75,6 +78,22 @@ class HBJob(pb.Referenceable):
         self.eta = None
         
         self.service = service
+        
+        self.queue = None
+    
+    def registerQueue(self, Queue):
+        
+        if self.queue != None:
+            raise Exception('We already have a Queue!')
+        
+        self.queue = Queue
+        
+    def unregisterQueue(self):
+        
+        if self.queue == None:
+            raise Exception('There is no Queue registered!')
+        
+        self.queue = None
     
     def remote_serveFiles(self):
         
