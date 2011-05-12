@@ -14,6 +14,7 @@ Contents:
    modules/HBClasses
    specs/protocol
    specs/sendingFiles
+   specs/program-flow
 
 Indices and tables
 ==================
