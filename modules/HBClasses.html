@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HBClasses — Documentation on the basic classes &mdash; Handbrake Distributed Scheduler v0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="Handbrake Distributed Scheduler v0.1 documentation" href="../index.html" />
+    <link rel="next" title="Protocol — A description of how we communicate" href="../specs/protocol.html" />
+    <link rel="prev" title="Welcome to Handbrake Distributed Scheduler’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../specs/protocol.html" title="Protocol — A description of how we communicate"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Handbrake Distributed Scheduler’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Handbrake Distributed Scheduler v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hbclasses-documentation-on-the-basic-classes">
+<h1><a class="reference internal" href="#module-HBClasses" title="HBClasses"><tt class="xref py py-mod docutils literal"><span class="pre">HBClasses</span></tt></a> &#8212; Documentation on the basic classes<a class="headerlink" href="#hbclasses-documentation-on-the-basic-classes" title="Permalink to this headline">¶</a></h1>
+<p>These classes makes up the basic set of class used for communication.</p>
+<span class="target" id="module-HBClasses"></span><dl class="class">
+<dt id="HBClasses.HBClient">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBClient</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>This identifies the client.</p>
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_queueUpdate">
+<tt class="descname">remote_queueUpdate</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_queueUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called to tell the client that we have changed their
+queue.</p>
+<p>Clients should now call <a class="reference internal" href="#HBClasses.HBQueue.remote_getJobs" title="HBClasses.HBQueue.remote_getJobs"><tt class="xref py py-meth docutils literal"><span class="pre">remote_getJobs()</span></tt></a> to see what
+has changed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It is possiable to compare referance objects and get a
+meaningful result. To using <tt class="docutils literal"><span class="pre">==</span></tt> to work out what jobs
+have been added or removed is viable.</p>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is achived by twisted using the <tt class="docutils literal"><span class="pre">.luid</span></tt> attribute.</p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_stopJob">
+<tt class="descname">remote_stopJob</tt><big>(</big><em>Job</em><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_stopJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called to get a client to stop working on a job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Job</strong> (<a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>) &#8211; The job to stop working on.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBClient.remote_shutdown">
+<tt class="descname">remote_shutdown</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBClient.remote_shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>The server is shutting down. All clients should stop work and
+exit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HBClasses.HBServer">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBServer</tt><big>(</big><em>pb.Root</em><big>)</big><a class="headerlink" href="#HBClasses.HBServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the root server object. This gets sent by  twisted when a client connects.</p>
+<dl class="method">
+<dt id="HBClasses.HBServer.remote_getQueue">
+<tt class="descname">remote_getQueue</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBServer.remote_getQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by a client to signify that they are ready to except jobs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A job queue</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBServer.remote_loseQueue">
+<tt class="descname">remote_loseQueue</tt><big>(</big><em>Queue</em><big>)</big><a class="headerlink" href="#HBClasses.HBServer.remote_loseQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the client to tell the server that it is no longer capable
+of completing the passed <a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Queue</strong> (<a class="reference internal" href="#HBClasses.HBQueue" title="HBClasses.HBQueue"><tt class="xref py py-class docutils literal"><span class="pre">HBQueue</span></tt></a>) &#8211; The Queue that can&#8217;t be completed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HBClasses.HBQueue">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBQueue</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This holds a load of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>&#8216;s and is passed to the
+clients so they know what to do.</p>
+<dl class="method">
+<dt id="HBClasses.HBQueue.remote_getJobs">
+<tt class="descname">remote_getJobs</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBQueue.remote_getJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This gets a list of assined <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>s from the server.
+The <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a> in index 0 should be executed first.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="#HBClasses.HBJob" title="HBClasses.HBJob"><tt class="xref py py-class docutils literal"><span class="pre">HBJob</span></tt></a>&#8216;s.</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="HBClasses.HBJob">
+<em class="property">class </em><tt class="descclassname">HBClasses.</tt><tt class="descname">HBJob</tt><big>(</big><em>pb.Referenceable</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>This tells the client to do a specific task. These should have
+some sort of hierarchy to allow jobs to happen simultaneously.
+e.g. download one raw file while transcoding another.</p>
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_serveFiles">
+<tt class="descname">remote_serveFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_serveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instructs the server to make the files nessary for the job
+avilable in an FTP location.</p>
+<p>The location returned will be a folder location, all files
+contained within are nessary for the job.</p>
+<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A URL to the FTP location of the format <a class="reference external" href="ftp://server:port/location">ftp://server:port/location</a></td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-data docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_returnFiles">
+<tt class="descname">remote_returnFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_returnFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instructs the server to open up an FTP location to return
+the file to.</p>
+<p>Read <a class="reference internal" href="../specs/sendingFiles.html#spec-sendingfiles"><em>Sending files</em></a> for more info.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A URL to the FTP location of the format <a class="reference external" href="ftp://server:port/location">ftp://server:port/location</a></td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-data docutils literal"><span class="pre">string</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_getArgs">
+<tt class="descname">remote_getArgs</tt><big>(</big><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_getArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of arguments that need to be passed to handbrake. The list just
+needs to be prepended with a process name after which it can be pass stright
+to <tt class="xref py py-meth docutils literal"><span class="pre">reactor.spawnProcess()</span></tt> as the <cite>arg</cite> keyword argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="xref py py-meth docutils literal"><span class="pre">reactor.spawnProcess()</span></tt> <cite>arg</cite> list</td>
+</tr>
+<tr class="field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setStage">
+<tt class="descname">remote_setStage</tt><big>(</big><em>Stage</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setStage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method sets the state of the job. The stage is an
+interger number between 1 and 5 which have the following
+meaning:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="23%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Number</th>
+<th class="head">Short Description</th>
+<th class="head">Long Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>Queued</td>
+<td>Nothing has happened to it, this is a jobs initial state</td>
+</tr>
+<tr><td>2</td>
+<td>Transfering to client</td>
+<td>The jobs files are currently being transfered to a client</td>
+</tr>
+<tr><td>3</td>
+<td>Transcoding</td>
+<td>The job is currenlty being transcoded and is in progress</td>
+</tr>
+<tr><td>4</td>
+<td>Transfering to server</td>
+<td>The jobs files are being transfered back after transcoding</td>
+</tr>
+<tr><td>5</td>
+<td>Complete</td>
+<td>The job is complete. All resulting files are back at the server</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Stage</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; The current stage of the job</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setPercentage">
+<tt class="descname">remote_setPercentage</tt><big>(</big><em>Percentage</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setPercentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This sets the percentage complete of the jobs current stage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Percentage</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Percent complete (0 - 100)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setETA">
+<tt class="descname">remote_setETA</tt><big>(</big><em>Time</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setETA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the time till completion of the current stage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Time</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Time till completion in seconds.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="HBClasses.HBJob.remote_setSpeed">
+<tt class="descname">remote_setSpeed</tt><big>(</big><em>Speed</em><big>)</big><a class="headerlink" href="#HBClasses.HBJob.remote_setSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the speed of the current stage. The unit of speed changes
+depending on the stage.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="64%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Stage</th>
+<th class="head">Unit</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>2 and 4</td>
+<td>MB/s</td>
+</tr>
+<tr><td>3</td>
+<td>FPS</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Speed</strong> (<tt class="xref py py-data docutils literal"><span class="pre">int</span></tt>) &#8211; Speed of current stage</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to Handbrake Distributed Scheduler&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../specs/protocol.html"
+                        title="next chapter">Protocol &#8212; A description of how we communicate</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/HBClasses.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../specs/protocol.html" title="Protocol — A description of how we communicate"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Handbrake Distributed Scheduler’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">Handbrake Distributed Scheduler v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Thomas Purchas.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
