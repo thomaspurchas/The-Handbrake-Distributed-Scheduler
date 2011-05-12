@@ -3,4 +3,4 @@
 Sending files
 =============
 
-To send file we will use FTP. Now write some more stuff in here.
+Sending files will use a super simple transfer protocol.
