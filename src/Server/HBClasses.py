@@ -14,9 +14,9 @@ class HBServer(pb.Root):
         
         self.service = service
 
-    def remote_getQueue(self):
+    def remote_getQueue(self, Client):
         
-        return self.service.createQueue()
+        return self.service.createQueue(Client)
     
     def remote_sendClient(self, Client):
         '''
@@ -28,7 +28,9 @@ class HBServer(pb.Root):
 
 class HBQueue(pb.Referenceable):
     
-    def __init__(self, Jobs=None):
+    def __init__(self, Client, Jobs=None):
+        
+        self.Client = Client
         
         if Jobs == None:
             self.jobs = []
@@ -41,6 +43,7 @@ class HBQueue(pb.Referenceable):
     def addJob(self, Job):
         
         self.jobs.append(Job)
+        self.client.callRemote("queueUpdate")
         
     def removeJob(self, Job):
         
@@ -75,15 +78,11 @@ class HBJob(pb.Referenceable):
     
     def remote_serveFiles(self):
         
-        self.service.serveFolder(self.folder + '/input', 'password')
-        
-        return "ftp://" + self.service.netLocation + '/' + self.folder + '/input'
+        return self.service.serveFiles(self.folder + '/input', 'password')
         
     def remote_returnFiles(self): 
         
-        self.service.serveFolder(self.folder + '/output', 'password')
-        
-        return "ftp://" + self.service.netLocation + '/' + self.folder + '/output'
+        return self.service.returnFiles(self.folder + '/output', 'password')
         
     def remote_getArgs(self):
         
