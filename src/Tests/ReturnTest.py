@@ -3,10 +3,15 @@ Created on 9 Jan 2011
 
 @author: Thomas Purchas
 '''
-import sys
-import time
-sys.stdout.write('test')
-sys.stdout.
-sys.stdout.write('jaf')
+class test(object):
     
-raw_input()
+    def __hash__(self):
+        return 1
+    
+    def __eq__(self, other):
+        
+        return 9
+    
+a = [test(), test(), test()]
+
+if test() in a : print 'YES'
