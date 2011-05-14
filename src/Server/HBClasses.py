@@ -61,16 +61,18 @@ class HBQueue(pb.Referenceable):
         
 class HBJob(pb.Referenceable):
     
-    def __init__(self, service, Folder, args=["HandBrake"]):
+    def __init__(self, service, Folder, name="Lazy!", args=["HandBrake"]):
         '''
         Create a new :class:`.HBJob`.
         
         :param Folder: The folder containing all the files for this job.
+        :param Name: Give it a human friendly name.
         :param args: The args that need to be passed to HandBrake
         '''
         
         self.args = args
         self.folder
+        self.name = name
         
         self.stage = 1
         self.percent = 0
