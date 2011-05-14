@@ -14,11 +14,14 @@ class HBClient(pb.Refernceable):
         self.service = service
         
     def remote_queueUpdate(self):
+        self.service.updateQueue()
         print 'queueUpdate called'
     
     def remote_stopJob(self, Job):
+        self.service.stopJob(Job)
         print 'stopJob called with', Job
     
     def remote_shutdown(self):
+        self.service.shutdown()
         print 'shutdown called'
         
