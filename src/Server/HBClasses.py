@@ -24,7 +24,7 @@ class HBServer(pb.Root):
         @param Client:
         '''
         
-        pass
+        self.service.newClient(Client)
 
 class HBQueue(pb.Referenceable):
     

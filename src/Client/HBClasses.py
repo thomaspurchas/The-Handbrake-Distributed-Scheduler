@@ -5,7 +5,7 @@ Created on 14 May 2011
 '''
 from twisted.spread import pb
 
-class HBClient(pb.Refernceable):
+class HBClient(pb.Referenceable):
     '''
     Client object
     '''

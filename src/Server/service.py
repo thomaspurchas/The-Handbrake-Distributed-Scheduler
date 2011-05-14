@@ -5,7 +5,7 @@ Created on 23 Apr 2011
 '''
 from HBClasses import HBJob, HBQueue
 
-class HBservice(object):
+class serverService(object):
     '''
     classdocs
     '''
@@ -17,8 +17,20 @@ class HBservice(object):
         '''
         self.jobs = []
         self.queues = []
+        self.clients = []
+    
+    def newClient(self, Client):
+        self.clients.append(Client)
         
-    def netLocation(self): pass
+    def connecitonFail(self, Failure, Client=None):
+        '''
+        Something has gone wrong some where. We shall print the traceback and
+        kill the client.
+        '''
+        
+        Failure.printTrackback()
+        if Client != None:
+            Client.callRemote('shutdown')
     
     def serveFolder(self, Folder): pass
     
@@ -30,9 +42,18 @@ class HBservice(object):
         
         self.queueJobs()
         
-    def createQueue(self):
+    def updateClients(self):
+        '''
+        Tell all the clients to update there queues.
+        '''
         
-        Q = HBQueue()
+        for client in self.clients:
+            
+            client.callRemote('updateQueue').addErrback(self.connectionFail, client)
+        
+    def createQueue(self, Client):
+        
+        Q = HBQueue(Client)
         
         self.queues.append(Q)
         
@@ -52,3 +73,5 @@ class HBservice(object):
                     shortest = Q
         
             shortest.addJob(job)
+        
+        self.updateClients()

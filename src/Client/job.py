@@ -21,3 +21,4 @@ class job(object):
         print 'New Job!!'
     
     def stop(self):
+        print 'Asked to stop job'

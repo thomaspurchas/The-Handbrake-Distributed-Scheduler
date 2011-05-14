@@ -7,7 +7,7 @@ from twisted.internet import reactor
 from job import job
 import HBClasses
 
-class ClientService(object):
+class clientService(object):
     '''
     The client service that will manage everything.
     '''
@@ -39,6 +39,7 @@ class ClientService(object):
         We have connected to the server, this means that we can use the
         serverObject and grab useful things like jobs etc.
         '''
+        print 'Connected'
         def queueStore(queue):
             '''
             Store the queue, but also call getJobs
@@ -51,7 +52,7 @@ class ClientService(object):
         
         serverObject.callRemote('sendClient', self.HBClient).addErrback(self.connectionFail)
         
-        d = serverObject.callRemote('getQueue')
+        d = serverObject.callRemote('getQueue', self.HBClient)
         
         d.addCallbacks(queueStore, self.connectionFail)
                 
