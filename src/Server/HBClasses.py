@@ -75,8 +75,8 @@ class HBJob(pb.Referenceable):
         self.name = name
         
         self.stage = 1
-        self.percent = 0
-        self.speed = 0
+        self.percent = None
+        self.speed = None
         self.eta = None
         
         self.service = service
@@ -112,6 +112,9 @@ class HBJob(pb.Referenceable):
     def remote_setStage(self, Stage):
         
         self.stage = Stage
+        self.percent = None
+        self.ea = None
+        self.speed = None
     
     def remote_setPercentage(self, Percentage):
         
