@@ -14,10 +14,10 @@ def bugger(fail):
 
 if __name__ == '__main__':
     log.startLogging(sys.stdout)
-    service = clientService()
+    service = clientService('localhost')
     factory = pb.PBClientFactory()
     
-    reactor.connectTCP('localhost', 8789, factory)
+    reactor.connectTCP(service.serverAddress, 8789, factory)
     
     d = factory.getRootObject()
     d.addCallback(service.serverConnected)
