@@ -6,6 +6,7 @@ Created on 14 May 2011
 from twisted.internet import reactor
 from job import job
 import HBClasses
+import transfer
 
 class clientService(object):
     '''
@@ -13,10 +14,12 @@ class clientService(object):
     '''
 
 
-    def __init__(self):
+    def __init__(self, serverAddress):
         '''
         Constructor
         '''
+        self.serverAddress = serverAddress
+        
         self.jobs = []
         self.rawJobs = []
         self.queue = None
@@ -105,3 +108,14 @@ class clientService(object):
         if self.queue != None: 
             d = self.queue.callRemote('getJobs')
             d.addCallbacks(self.sortJobs, self.connectionFail)
+            
+    def fileFromServerTo(self, details, location):
+        
+        if not hasattr(transfer, 'xfer_' + details[0]):
+            raise Exception('REPLACE, We do not support that transfer method')
+        
+        else:
+            agent = getattr(transfer, 'xfer_' + details[0])
+            
+            return agent(location, self, *details[1:])
+        
