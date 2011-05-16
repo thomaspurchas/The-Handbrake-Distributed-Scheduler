@@ -95,7 +95,7 @@ class clientService(object):
                 newjobs.append(j)
                 
         for j in newjobs:
-            self.jobs.append(job(j))
+            self.jobs.append(job(self, j))
             
         
     def updateQueue(self):
