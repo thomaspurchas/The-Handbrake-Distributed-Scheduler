@@ -4,6 +4,26 @@ Created on 16 May 2011
 @author: Thomas Purchas
 '''
 
+from twisted.internet.protocol import ProcessProtocol
+
+class Protocol(ProcessProtocol):
+    
+    def __init__(self, manager):
+        
+        self.service = Manager
+        
+    def outReceived(self, data):
+        
+        print 'out:', data
+        
+    def errReceived(self, data):
+        
+        print 'err:', data
+        
+    def processExited(self, failure):
+        
+        print 'exitcode:', failure.exitCode
+
 class Manager(object):
     '''
     This is a management class for looking after Handbrake. Inisalising this
