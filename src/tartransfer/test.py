@@ -11,7 +11,7 @@ from twisted.internet import reactor
 def stop(_): reactor.stop()
 
 if __name__ == '__main__':
-    C = Client('../Tests/Taroutput')
+    C = Client('../Tests/tartransfer')
     S = Sender()
     
     S.beginTransfer(C, '../', '').addCallback(stop)
