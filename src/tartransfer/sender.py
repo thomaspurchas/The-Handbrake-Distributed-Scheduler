@@ -14,58 +14,46 @@ class protocol(Protocol):
     def __init__(self):
         self.buffer = ''
         self.paused = False
+        self.finished = False
     
     def dataReceived(self, data):
-        
-        self.buffer += data
-        
-        if (len(self.buffer) >= 32000) and not self.paused:
             
-            self.transport.pauseProducing()
-            self.paused = True
-            
-    def getData(self):
-        
-        data = self.buffer
-        self.buffer = ''
-        
-        if self.paused:
-            self.transport.resumeProducing() 
-            self.paused = False  
-        
-        return data
+        self.service.sendData(data)
     
     def connectionMade(self):
-        print 'connectionMade'
+        #print 'connectionMade'
         self.service.connectionMade(self)
         
     def connectionLost(self, failure):
-        print 'DONE2'
+        #print 'DONE2'
         self.service.finished()
         
     def stop(self):
-        
+        #print 'SERVER: Told to stop!'
         self.transport.loseConnection()
         self.buffer = ''
 
 class tarThread(threading.Thread):
     
-    def __init__(self, port, item):
+    def __init__(self, port, item, compression):
         
         threading.Thread.__init__(self)
         
         self.port = port
         self.item = item
+        self.compression = compression
     
     def run(self):
-        print 'THREAD START'
+        #print 'THREAD START'
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         sock.connect(('localhost', self.port))
-        print 'SOCK CONNECTED CLIENT SIDE'
+        # Shutdown the reading half of the socket
+        #sock.shutdown(socket.SHUT_RD)
+        #print 'SOCK CONNECTED CLIENT SIDE'
         fileobj = sock.makefile()
         
-        tar = tarfile.open(fileobj=fileobj, mode='w|bz2')
+        tar = tarfile.open(fileobj=fileobj, mode='w|' + self.compression)
         
         tar.add(self.item)
         tar.close()
@@ -73,10 +61,10 @@ class tarThread(threading.Thread):
         sock.shutdown(socket.SHUT_RDWR)
         sock.close()
         
-        print 'DONE'
+        #print 'DONE'
         
 
-class sender(object):
+class Sender(object):
     '''
     This provides a asynchronous interface for folder streaming that provides
     a twisted producer interface.
@@ -97,11 +85,14 @@ class sender(object):
         self.listen = port
         self.port = port.getHost().port
         
-        self.lastchunk = None
+        self.lastchunk = False
         
-    def beginTransfer(self, item, consumer):
+    def beginTransfer(self, consumer, item, compression=''):
         '''
         '''
+        
+        if compression not in ('bz2', 'gz', ''):
+            raise ValueError('%s is an invalid compression algorithm' % compression)
         
         self.item = item
         
@@ -109,7 +100,7 @@ class sender(object):
         
         self.deferred = d = defer.Deferred()
         
-        self.thread = tarThread(self.port, self.item)
+        self.thread = tarThread(self.port, self.item, compression)
         self.thread.start()
         
         return d
@@ -120,30 +111,29 @@ class sender(object):
         
         self.protocol = proto
         
-        self.consumer.registerProducer(self, False)
-        
+        self.consumer.registerProducer(self, True)
+     
     def finished(self):
-        
-        self.lastchunk = self.protocol.getData()
-        
-    def resumeProducing(self):
-        
-        if self.lastchunk == None:
-            data = self.protocol.getData()
-            
-        else:
-            data = self.lastchunk
+         
+        self.consumer.unregisterProducer()
+        self.deferred.callback(None)
+     
+    def sendData(self, data):
         
         self.consumer.write(data)
         
-        if self.lastchunk != None:
-            self.consumer.unregisterProducer()
+    def resumeProducing(self):
+        #print 'SERVER: Resume'
+        self.protocol.transport.resumeProducing()
     
-    def pauseProducing(self): pass
+    def pauseProducing(self): 
+        #print 'SERVER: Pause'
+        self.protocol.transport.pauseProducing()
     
     def stopProducing(self): 
-        
+        #print 'SERVER: stopProducing'
         self.protocol.stop()
+        self.deferred.errback(None)
         
 class testC(object):
     
@@ -174,10 +164,10 @@ class testC(object):
         
 if __name__ == '__main__':
     
-    s = sender()
+    s = Sender()
     c = testC()
     
-    s.beginTransfer('.', c)
+    s.beginTransfer(c, '.', 'bz2')
     
     #reactor.callWhenRunning(c.printstuff())
     reactor.run()
