@@ -19,24 +19,25 @@ class clientService(object):
         Constructor
         '''
         self.serverAddress = serverAddress
-        
+
         self.jobs = []
         self.rawJobs = []
         self.queue = None
         self.HBClient = HBClasses.HBClient(self)
-        
+        self.currentjob = None
+
     def connectionFail(self, Failure):
         '''
         This is a bog standard error handler that just prints the failure kills
         the reactor. This need further improvement in the future, but it will do
         for now.
         '''
-        
+
         Failure.printTraceback()
         reactor.stop()
-        
+
         return None
-        
+
     def serverConnected(self, serverObject):
         '''
         We have connected to the server, this means that we can use the
@@ -50,15 +51,15 @@ class clientService(object):
             d = queue.callRemote('getJobs')
             d.addCallbacks(self.sortJobs, self.connectionFail)
             self.queue = queue
-        
+
         self.server = serverObject
-        
+
         serverObject.callRemote('sendClient', self.HBClient).addErrback(self.connectionFail)
-        
+
         d = serverObject.callRemote('getQueue', self.HBClient)
-        
+
         d.addCallbacks(queueStore, self.connectionFail)
-                
+
     def shutdown(self):
         '''
         That's it. Game over. The shit has hit the fan, and it time to say bye 
@@ -68,7 +69,7 @@ class clientService(object):
         stop the flow of callbacks. But it will give things a bit of time to
         stop.
         '''
-        
+
         reactor.stop()
 
     def stopJob(self, Job):
@@ -76,15 +77,34 @@ class clientService(object):
         Have a look at all of our jobs. If it's running tell it to stop, else
         just kill the ref.
         '''
-        
+
         for j in self.jobs:
             if Job == j.raw:
                 j.stop()
                 break
 
-        else:    
-            raise Exception('We got told to stop a job we don''t have!!')
-        
+        else:
+            if self.currentjob.raw == Job:
+                self.currentjob.stop()
+                self.startAJob()
+            else:
+                raise Exception('We got told to stop a job we don''t have!!')
+
+    def startAJob(self, *args, **kargs):
+        '''
+        Get the jobs rolling.
+        '''
+
+        if len(self.jobs) == 0:
+            print 'No more jobs!'
+
+        else:
+            self.currentjob = self.jobs.pop()
+
+            d = self.currentjob.start()
+
+            d.addCallback(self.startAJob)
+
     def sortJobs(self, Jobs):
         '''
         This takes a list of job references from the server, and filters them
@@ -96,26 +116,28 @@ class clientService(object):
             if not (j in self.rawJobs):
                 self.rawJobs.append(j)
                 newjobs.append(j)
-                
+
         for j in newjobs:
             self.jobs.append(job(self, j))
-            
-        
+
+        if self.currentjob == None:
+            self.startAJob()
+
     def updateQueue(self):
         '''
         Update our job queue.
         '''
-        if self.queue != None: 
+        if self.queue != None:
             d = self.queue.callRemote('getJobs')
             d.addCallbacks(self.sortJobs, self.connectionFail)
-            
+
     def fileFromServerTo(self, details, location):
-        
+
         if not hasattr(transfer, 'xfer_' + details[0]):
             raise Exception('REPLACE, We do not support that transfer method')
-        
+
         else:
             agent = getattr(transfer, 'xfer_' + details[0])
-            
+
             return agent(location, self, *details[1:])
-        
+
