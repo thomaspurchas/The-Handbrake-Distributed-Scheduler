@@ -36,7 +36,7 @@ class common(object):
 
     def GetInfo(self):
 
-        return (self.port, self.host)
+        return ('tarstream', self.port, self.host)
 
 class FileSender(common):
     '''
