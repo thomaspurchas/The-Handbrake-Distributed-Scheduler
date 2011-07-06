@@ -4,6 +4,17 @@ Created on 23 Apr 2011
 @author: Thomas Purchas
 '''
 from twisted.spread import pb
+from twisted.internet.task import LoopingCall
+import msvcrt
+
+def GetKeys(service):
+
+    try:
+        while msvcrt.kbhit():
+            msvcrt.getch()
+            service.createJob(('test',))
+            print 'Created job'
+    except: raise
 
 class HBServer(pb.Root):
     '''
@@ -13,6 +24,9 @@ class HBServer(pb.Root):
     def __init__(self, service):
 
         self.service = service
+
+        loop = LoopingCall(GetKeys, service)
+        loop.start(0.5, True)
 
     def remote_getQueue(self, Client):
 
@@ -45,7 +59,7 @@ class HBQueue(pb.Referenceable):
         self.jobs.append(Job)
         self.client.callRemote("queueUpdate")
 
-        self.Job.registerQueue(self)
+        Job.registerQueue(self)
 
     def removeJob(self, Job):
 

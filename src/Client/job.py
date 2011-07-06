@@ -19,7 +19,7 @@ class job(object):
         '''
         Takes a HBJob reference and wraps it up.
         '''
-
+        self.service = service
         self.raw = HBJob
         self.dir = tempfile.mkdtemp()
         self.original = os.path.join(self.dir, 'original')
@@ -64,7 +64,12 @@ class job(object):
 
         self.hbManager = Handbrake.Manager(self.args, self.raw)
 
-        return self.hbManager.start()
+        print 'We got args:', self.args
+        print 'and files at:', self.original
+
+        d = defer.succeed(None)
+        return d
+        #return self.hbManager.start()
 
     def start(self):
         '''

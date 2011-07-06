@@ -4,7 +4,9 @@ Created on 6 Jul 2011
 @author: Thomas Purchas
 '''
 from twisted.internet.protocol import ServerFactory, Protocol
+from twisted.internet import reactor
 from tartransfer import sender, client
+from os import path
 
 class Protocol(Protocol):
 
@@ -25,12 +27,12 @@ class common(object):
         Here we will grab the folder we are going to send and get ready to go.
         '''
 
-        self.folder = Folder
+        self.folder = path.abspath(Folder + '/readme.md')
 
         # Now set up the sending factory.
         self.factory = ServerFactory()
         self.factory.service = self
-        self.factory.protocol = Protocol()
+        self.factory.protocol = Protocol
 
         port = reactor.listenTCP(0, self.factory, interface='')
 
@@ -40,7 +42,11 @@ class common(object):
 
     def GetInfo(self):
 
-        return ('tarstream', self.port, self.host)
+        return ('tarstream', self.port)
+
+    def finished(self, _, transport):
+
+        transport.loseConnection()
 
 class FileSender(common):
     '''
@@ -51,12 +57,13 @@ class FileSender(common):
         This gets called by the :class:`.Protocol` with the transport.
         '''
 
-        sender = sender.Sender()
+        send = sender.Sender()
+        print 'Sending:', self.folder
+        d = send.beginTransfer(transport, self.folder)
 
-        sender.beginTransfer(transport, self.folder)
+        self.listen.stopListening()
 
-        self.port.stopListening()
-
+        d.addCallback(self.finished, transport)
 
 class FileReceiver(common):
     '''
@@ -68,4 +75,4 @@ class FileReceiver(common):
 
         self.receiver.registerProducer(transport, True)
 
-        self.port.stopListening()
+        self.listen.stopListening()

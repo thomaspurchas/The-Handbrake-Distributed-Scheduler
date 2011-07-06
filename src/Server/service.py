@@ -23,7 +23,7 @@ class serverService(object):
     def newClient(self, Client):
         self.clients.append(Client)
 
-    def connecitonFail(self, Failure, Client=None):
+    def connectionFail(self, Failure, Client=None):
         '''
         Something has gone wrong some where. We shall print the traceback and
         kill the client.
@@ -41,8 +41,7 @@ class serverService(object):
         return receiver.GetInfo()
 
     def createJob(self, SomeInfo):
-
-        job = HBJob(*SomeInfo)
+        job = HBJob(self, *SomeInfo)
 
         self.jobs.append(job)
 
@@ -55,7 +54,7 @@ class serverService(object):
 
         for client in self.clients:
 
-            client.callRemote('updateQueue').addErrback(self.connectionFail, client)
+            client.callRemote('queueUpdate').addErrback(self.connectionFail, client)
 
     def createQueue(self, Client):
 
@@ -68,6 +67,9 @@ class serverService(object):
     def queueJobs(self):
 
         for job in self.jobs:
+
+            if job.queue != None:
+                continue
 
             shortest = None
 

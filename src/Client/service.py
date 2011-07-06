@@ -94,6 +94,8 @@ class clientService(object):
         '''
         Get the jobs rolling.
         '''
+        def finished(_):
+            self.currentjob = None
 
         if len(self.jobs) == 0:
             print 'No more jobs!'
@@ -102,7 +104,7 @@ class clientService(object):
             self.currentjob = self.jobs.pop()
 
             d = self.currentjob.start()
-
+            d.addCallback(finished)
             d.addCallback(self.startAJob)
 
     def sortJobs(self, Jobs):
@@ -132,12 +134,12 @@ class clientService(object):
             d.addCallbacks(self.sortJobs, self.connectionFail)
 
     def fileFromServerTo(self, details, location):
-
+        print 'Got transfer request:', details
         if not hasattr(transfer, 'xfer_' + details[0]):
             raise Exception('REPLACE, We do not support that transfer method')
 
         else:
             agent = getattr(transfer, 'xfer_' + details[0])
 
-            return agent(location, self, *details[1:])
+            return agent(location, self, self.serverAddress, *details[1:])
 

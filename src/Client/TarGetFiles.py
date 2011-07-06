@@ -5,7 +5,7 @@ Created on 6 Jul 2011
 '''
 
 from twisted.internet.protocol import ClientFactory, Protocol
-from twisted.internet import defer
+from twisted.internet import defer, reactor
 from tartransfer import sender, client
 
 class Protocol(Protocol):
@@ -14,7 +14,7 @@ class Protocol(Protocol):
 
         self.factory.service.Start(self.transport)
 
-    def connectionLost(self):
+    def connectionLost(self, _):
 
         self.factory.service.finished()
 
@@ -37,20 +37,19 @@ class common(object):
         # Now set up the sending factory.
         self.factory = ClientFactory()
         self.factory.service = self
-        self.factory.protocol = Protocol()
+        self.factory.protocol = Protocol
 
         reactor.connectTCP(Host, Port, self.factory)
 
-        d = defer.Deferred()
-
-        return d
+        self.deferred = defer.Deferred()
 
     def finished(self):
         '''
         Transfer finished, call the deferreds callback.
         '''
-        if self.d is not None:
-            d, self.d = self.d, None
+        print 'Got files and finished transfer'
+        if self.deferred is not None:
+            d, self.deferred = self.deferred, None
 
             d.callback(None)
 
