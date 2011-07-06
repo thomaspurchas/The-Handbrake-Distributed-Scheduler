@@ -63,3 +63,5 @@ class FileReceiver(common):
         receiver = client.Client(self.folder)
 
         receiver.registerProducer(transport, True)
+
+        self.port.stopListening()
