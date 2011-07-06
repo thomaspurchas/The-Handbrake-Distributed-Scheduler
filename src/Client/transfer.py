@@ -11,5 +11,10 @@ def xfer_sockets(destination, service, port):
     files to wrap and compress the data.
     '''
     pass
-    
-        
+
+def xfer_tarstream(destination, service, port, host):
+    '''
+    This transfer method uses the tartransfer library to send files over the
+    wire using a tar stream.
+    '''
+    pass
