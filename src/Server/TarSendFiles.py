@@ -12,6 +12,10 @@ class Protocol(Protocol):
 
         self.factory.service.Start(self.transport)
 
+    def dataReceived(self, data):
+
+        self.factory.service.receiver.write(data)
+
 class common(object):
     '''
     This has all the common file sending code, like setting up.
@@ -60,8 +64,8 @@ class FileReceiver(common):
     '''
     def Start(self, transport):
 
-        receiver = client.Client(self.folder)
+        self.receiver = client.Client(self.folder)
 
-        receiver.registerProducer(transport, True)
+        self.receiver.registerProducer(transport, True)
 
         self.port.stopListening()
