@@ -20,7 +20,7 @@ class HBServer(pb.Root):
     
     def remote_sendClient(self, Client):
         '''
-        Do something usefull
+        Do something useful
         @param Client:
         '''
         
@@ -71,7 +71,7 @@ class HBJob(pb.Referenceable):
         '''
         
         self.args = args
-        self.folder
+        self.folder = Folder
         self.name = name
         
         self.stage = 1
@@ -99,11 +99,11 @@ class HBJob(pb.Referenceable):
     
     def remote_serveFiles(self):
         
-        return self.service.serveFiles(self.folder + '/input', 'password')
+        return self.service.serveFiles(self.folder + '/input')
         
     def remote_returnFiles(self): 
         
-        return self.service.returnFiles(self.folder + '/output', 'password')
+        return self.service.returnFiles(self.folder + '/output')
         
     def remote_getArgs(self):
         
